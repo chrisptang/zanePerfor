@@ -7,7 +7,7 @@ module.exports = () => {
 
     // 用于安全校验和回调域名根路径 开发路径域名（必填）
     // 线上环境此处替换为项目根域名 例如:https://blog.seosiwei.com (这里需要填写http|https和斜杠等字符)
-    config.origin = 'https://www.xxx.com';
+    config.origin = '__config_origin__';
 
     // 百度地图api key
     config.BAIDUAK = 'xxxxxxxxxx';
@@ -43,9 +43,9 @@ module.exports = () => {
     // redis配置
     config.redis = {
         client: {
-            port: 6379, // Redis port
-            host: 'xx.xx.xx.xx', // Redis host
-            password: 'xxxxxx',
+            port: __config_redis_client_port__, // Redis port
+            host: '__config_redis_client_host__', // Redis host
+            password: '__config_redis_client_password__',
             db: 0,
         },
     };
@@ -54,7 +54,7 @@ module.exports = () => {
     const dbclients = {
         db3: {
             // 单机部署
-            url: 'mongodb://127.0.0.1:27017/performance',
+            url: '__config_db_mongo_url__',
             // 副本集 读写分离
             // url: 'mongodb://127.0.0.1:28100,127.0.0.1:28101,127.0.0.1:28102/performance?replicaSet=rs1',
             // 集群分片
@@ -72,7 +72,7 @@ module.exports = () => {
     if (config.report_data_type === 'mongodb') {
         dbclients.db1 = {
             // url: 'mongodb://127.0.0.1:27017,127.0.0.1:27018/performance?replicaSet=performance',
-            url: 'mongodb://127.0.0.1:27019/performance',
+            url: '__config_db_mongo_url__',
             options: {
                 poolSize: 100,
                 keepAlive: 10000,
@@ -90,7 +90,7 @@ module.exports = () => {
     };
 
     config.security = {
-        domainWhiteList: [ 'https://xxx.xx.com' ],
+        domainWhiteList: [ '__config_origin__' ],
         csrf: {
             enable: false,
             ignore: '/api/v1/report/**',

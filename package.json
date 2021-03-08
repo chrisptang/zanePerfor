@@ -38,6 +38,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --workers=2 --title=performance",
+    "prod": "egg-scripts start --daemon --workers=2 --title=performance",
     "stop": "egg-scripts stop --title=performance",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",

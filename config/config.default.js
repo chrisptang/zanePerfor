@@ -19,7 +19,7 @@ module.exports = () => {
 
     // 线上环境此处替换为项目根域名 例如:blog.seosiwei.com (这里不需要填写http|https和斜杠等字符)
     // 用于安全校验和回调域名根路径 开发路径域名
-    config.host = '127.0.0.1';
+    config.host = '__config_host__';
 
     config.port = 7001;
 
@@ -30,12 +30,12 @@ module.exports = () => {
         listen: {
             port: config.port,
             hostname: '127.0.0.1',
-            ip: address.ip(),
+            ip: '__config_cluster_listen_ip__',
         },
     };
 
     // 用户密码加盐随机值
-    config.user_pwd_salt_addition = 'ZANEHELLOBEAUTIFUL';
+    config.user_pwd_salt_addition = `salt_${config.host}_${config.port}`;
 
     // 用户登录态持续时间 1 天
     config.user_login_timeout = 86400;
@@ -59,7 +59,7 @@ module.exports = () => {
     config.ip_thread = 5;
 
     // 上报原始数据使用redis存储、kafka储存、还是使用mongodb存储
-    config.report_data_type = 'redis'; // redis kafka mongodb
+    config.report_data_type = '__config_report_data_type__'; // redis kafka mongodb
 
     // 使用redis储存原始数据时，相关配置 （report_data_type=redis生效）
     config.redis_consumption = {
@@ -233,9 +233,9 @@ module.exports = () => {
     // redis配置
     config.redis = {
         client: {
-            port: 6379, // Redis port
-            host: '127.0.0.1', // Redis host
-            password: '',
+            port: __config_redis_client_port__, // Redis port
+            host: '__config_redis_client_host__', // Redis host
+            password: '__config_redis_client_password__',
             db: 0,
         },
     };
@@ -244,7 +244,7 @@ module.exports = () => {
     const dbclients = {
         db3: {
             // 单机部署
-            url: 'mongodb://127.0.0.1:27017/performance',
+            url: '__config_db_mongo_url__',//   e.g: mongodb://127.0.0.1:27017/performance
             // 副本集 读写分离
             // url: 'mongodb://127.0.0.1:28100,127.0.0.1:28101,127.0.0.1:28102/performance?replicaSet=rs1',
             // 集群分片
@@ -257,7 +257,7 @@ module.exports = () => {
     };
     if (config.report_data_type === 'mongodb') {
         dbclients.db1 = {
-            url: 'mongodb://127.0.0.1:27019/performance',
+            url: '__config_db_mongo_url__',
             options: {
                 poolSize: 20,
             },

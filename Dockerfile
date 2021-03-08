@@ -9,6 +9,21 @@ ENV REDIS_USER 'root'
 ENV REDIS_PASSWORD ''
 ENV DINGTALK_BOT 'https://dingtalk-bot-url/?accessToken=foo'
 
+#环境：dev，开发环境，prod线上环境
+ENV ENV_TYPE 'dev'
+
+# 上报原始数据使用redis存储、kafka储存、还是使用mongodb存储
+ENV CONFIG_REPORT_DATA_TYPE 'mongo'
+
+ENV CONFIG_HOST 'localhost'
+ENV CONFIG_CLUSTER_LISTEN_IP '127.0.0.1'
+ENV CONFIG_REDIS_CLIENT_PORT '6379'
+ENV CONFIG_REDIS_CLIENT_HOST 'redis'
+ENV CONFIG_REDIS_CLIENT_PASSWORD ''
+ENV CONFIG_DB_MONGO_URL 'mongodb://mongodb:27017/performance'
+ENV CONFIG_ORIGIN 'http://localhost:7001'
+
+
 COPY . /app
 WORKDIR /app
 RUN npm install
