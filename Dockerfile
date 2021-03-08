@@ -23,6 +23,7 @@ ENV CONFIG_REDIS_CLIENT_PASSWORD ''
 ENV CONFIG_DB_MONGO_URL 'mongodb://mongodb:27017/performance'
 ENV CONFIG_ORIGIN 'http://localhost:7001'
 
+ENV CONFIG_PASSWORD_SALT 'pass_salt_!QAZ'
 
 COPY . /app
 WORKDIR /app
@@ -31,4 +32,5 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
 RUN chmod +x /app/docker-start.sh
 EXPOSE 7001
+EXPOSE 7002
 CMD /app/docker-start.sh
