@@ -1,4 +1,4 @@
-FROM  node:15.11.0-alpine
+FROM  node:15.11.0-slim
 # FROM node:15.11.0
 
 ENV MONGO_HOST 'localhost'
@@ -14,7 +14,7 @@ ENV DINGTALK_BOT 'https://dingtalk-bot-url/?accessToken=foo'
 ENV ENV_TYPE 'dev'
 
 # 上报原始数据使用redis存储、kafka储存、还是使用mongodb存储
-ENV CONFIG_REPORT_DATA_TYPE 'mongo'
+ENV CONFIG_REPORT_DATA_TYPE 'mongodb'
 
 ENV CONFIG_HOST 'localhost'
 ENV CONFIG_CLUSTER_LISTEN_IP '127.0.0.1'
