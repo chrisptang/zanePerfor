@@ -23,13 +23,13 @@ module.exports = () => {
 
     config.port = 7002;
 
-    config.origin = `http://${config.host}:${config.port}`;
+    // config.origin = `http://${config.host}:${config.port}`;
 
     // 集群配置（一般默认即可）
     config.cluster = {
         listen: {
             port: config.port,
-            hostname: config.host,
+            // hostname: config.host,
             ip: '0.0.0.0',
         },
     };
