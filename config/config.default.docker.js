@@ -167,8 +167,8 @@ module.exports = () => {
 
     // github login
     config.github = {
-        client_id: 'xxxxxx', // github的 Client Id
-        client_secret: 'xxxxxx', // github的 Client Secret
+        client_id: '__config_github_client_id__',
+        client_secret: '__config_github_client_secret__',
         scope: [ 'user' ], // 表示只获取用户信息
     };
 
@@ -182,15 +182,15 @@ module.exports = () => {
 
     // 新浪微博 login
     config.weibo = {
-        client_id: 'xxxxxx', // 微博的App Key
-        client_secret: 'xxxxxx', // 微博的App Secret
+        client_id: '', // 微博的App Key
+        client_secret: '', // 微博的App Secret
         scope: [ 'all' ],
     };
 
     // wechat login
     config.wechat = {
-        client_id: 'xxxxxx', // 微信的AppId
-        client_secret: 'xxxxxx', // 微信的App Secret
+        client_id: '__config_wechat_client_id__',
+        client_secret: '__config_wechat_client_secret__',
     };
 
     // 从 `Node.js 性能平台` 获取对应的接入参数 https://node.console.aliyun.com

@@ -10,6 +10,10 @@ sed -i 's,__config_redis_client_host__,'"$CONFIG_REDIS_CLIENT_HOST"',g' /app/con
 sed -i 's,__config_redis_client_password__,'"$CONFIG_REDIS_CLIENT_PASSWORD"',g' /app/config/config.default.docker.js
 sed -i 's,__config_db_mongo_url__,'"$CONFIG_DB_MONGO_URL"',g' /app/config/config.default.docker.js
 sed -i 's,__config_password_salt__,'"$CONFIG_PASSWORD_SALT"',g' /app/config/config.default.docker.js
+sed -i 's,__config_github_client_id__,'"$CONFIG_GITHUB_CLIENT_ID"',g' /app/config/config.default.docker.js
+sed -i 's,__config_github_client_secret__,'"$CONFIG_GITHUB_CLIENT_SECRET"',g' /app/config/config.default.docker.js
+sed -i 's,__config_wechat_client_id__,'"$CONFIG_WECHAT_CLIENT_ID"',g' /app/config/config.default.docker.js
+sed -i 's,__config_wechat_client_secret__,'"$CONFIG_WECHAT_CLIENT_SECRET"',g' /app/config/config.default.docker.js
 
 cat /app/config/config.default.docker.js > /app/config/config.default.js
 
@@ -21,6 +25,10 @@ sed -i 's,__config_redis_client_host__,'"$CONFIG_REDIS_CLIENT_HOST"',g' /app/con
 sed -i 's,__config_redis_client_password__,'"$CONFIG_REDIS_CLIENT_PASSWORD"',g' /app/config/config.prod.docker.js
 sed -i 's,__config_db_mongo_url__,'"$CONFIG_DB_MONGO_URL"',g' /app/config/config.prod.docker.js
 sed -i 's,__config_origin__,'"$CONFIG_ORIGIN"',g' /app/config/config.prod.docker.js
+sed -i 's,__config_github_client_id__,'"$CONFIG_GITHUB_CLIENT_ID"',g' /app/config/config.prod.docker.js
+sed -i 's,__config_github_client_secret__,'"$CONFIG_GITHUB_CLIENT_SECRET"',g' /app/config/config.prod.docker.js
+sed -i 's,__config_wechat_client_id__,'"$CONFIG_WECHAT_CLIENT_ID"',g' /app/config/config.prod.docker.js
+sed -i 's,__config_wechat_client_secret__,'"$CONFIG_WECHAT_CLIENT_SECRET"',g' /app/config/config.prod.docker.js
 
 cat /app/config/config.prod.docker.js > /app/config/config.prod.js
 

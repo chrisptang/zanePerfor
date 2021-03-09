@@ -14,8 +14,8 @@ module.exports = () => {
 
     // github login
     config.github = {
-        client_id: 'xxxxxx',
-        client_secret: 'xxxxxx',
+        client_id: '__config_github_client_id__',
+        client_secret: '__config_github_client_secret__',
         scope: [ 'user' ],
     };
 
@@ -29,15 +29,15 @@ module.exports = () => {
 
     // 新浪微博 login
     config.weibo = {
-        client_id: 'xxxxxx', // 微博的App Key
-        client_secret: 'xxxxxx', // 微博的App Secret
+        client_id: '', // 微博的App Key
+        client_secret: '', // 微博的App Secret
         scope: [ 'all' ],
     };
 
     // wechat login
     config.wechat = {
-        client_id: 'xxxxxx', // 微信的AppId
-        client_secret: 'xxxxxx', // 微信的App Secret
+        client_id: '__config_wechat_client_id__',
+        client_secret: '__config_wechat_client_secret__',
     };
 
     // redis配置
