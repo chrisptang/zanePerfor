@@ -1,5 +1,5 @@
-#FROM  node:15.11.0-alpine
-FROM node:15.11.0
+FROM  node:15.11.0-alpine
+# FROM node:15.11.0
 
 ENV MONGO_HOST 'localhost'
 ENV MONGO_USER 'root'
