@@ -16,8 +16,8 @@ class AlarmsService extends Service {
      * @returns
      * @memberof AlarmsService
      */
-    async getList(pageNos, pageSize, appId, startDate, endDate) {
-        pageNos = pageNos * 1;
+    async getList(pageNo, pageSize, appId, startDate, endDate) {
+        pageNo = pageNo * 1;
         pageSize = pageSize * 1;
 
         const query = {};
@@ -34,7 +34,7 @@ class AlarmsService extends Service {
 
         const count = Promise.resolve(this.ctx.model.Alarm.count(query).exec());
         const alarmList = Promise.resolve(
-            this.ctx.model.Alarm.find(query).skip((pageNos - 1) * pageSize)
+            this.ctx.model.Alarm.find(query).skip((pageNo - 1) * pageSize)
                 .limit(pageSize)
                 .exec()
         );
@@ -43,7 +43,7 @@ class AlarmsService extends Service {
         return {
             datalist: list,
             totalNum: all[0],
-            pageNo: pageNos,
+            pageNo: pageNo,
         };
     }
 

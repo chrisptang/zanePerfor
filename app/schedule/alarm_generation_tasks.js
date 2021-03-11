@@ -8,7 +8,6 @@ module.exports = app => {
             type: 'worker',
             disable: false,
         },
-        // 定时处理上报的数据 db1同步到db3数据
         async task(ctx) {
             app.logger.info('生成所有app的告警任务启动ing...');
             const app_list = await ctx.model.System.find({ is_use: 0 }).exec();

@@ -9,10 +9,17 @@ module.exports = app => {
         system,
         errors,
         emails,
+        alarms,
     } = controller.api;
 
     // 校验用户是否登录中间件
     const tokenRequired = middleware.tokenRequired();
+
+    // -----------------告警相关------------------
+    // 获取app告警列表
+    apiV1Router.get('alarms/list', alarms.getAppAlarms);
+    // 删除某个app告警
+    apiV1Router.post('alarms/delete', alarms.delete);
 
     // -----------------用户相关------------------
     // 用户登录
