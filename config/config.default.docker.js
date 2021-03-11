@@ -171,13 +171,13 @@ module.exports = () => {
     //钉钉机器人告警；
     config.dintalk_bot = {
         url: '__config_dingtalk_bot_url__'
-    }
+    };
 
     //告警配置项；
     config.alarm = {
         timeInterval: 5,
         warningThreshold: 10
-    }
+    };
 
     // github login
     config.github = {

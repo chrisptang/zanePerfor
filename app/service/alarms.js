@@ -74,13 +74,17 @@ class AlarmsService extends Service {
     async generateErrorAlarmsForApp(appId) {
         if (!appId) throw new Error("App id could not be empty");
         let timeInterval = 5;//5 minutes be default.
-        if (this.config.alarm.timeInterval) timeInterval = this.config.alarm.timeInterval;
+        if (this.app.config.alarm.timeInterval) timeInterval = this.app.config.alarm.timeInterval;
         let warningThreshold = 10;
-        if (this.config.alarm.warningThreshold) warningThreshold = this.config.alarm.warningThreshold;
+        if (this.app.config.alarm.warningThreshold) warningThreshold = this.app.config.alarm.warningThreshold;
 
         const alarmCreateTime = Date.now;
 
-        const errorsModel = await this.ctx.model[`web_errors_${appId}`];
+        const errorsModel = this.ctx.model.Web[`web_errors_${appId}`];
+        if (!errorsModel) {
+            this.app.logger.warn(`no web_errors for app:${appId}`, this.ctx.model.Web);
+            return 0;
+        }
         const groupedErrors = await errorsModel.aggregate([
             { $match: { app_id: appId, create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 60) } } },
             {

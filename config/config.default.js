@@ -157,6 +157,12 @@ module.exports = () => {
         servers: [path.resolve(__dirname, '../servers-restart.sh')],
     };
 
+    //告警配置项；
+    config.alarm = {
+        timeInterval: 5,
+        warningThreshold: 10
+    };
+
     // ip 解析 为 省市区
     config.location = {
         type: 'ip-api', // baidu | ip-api,
