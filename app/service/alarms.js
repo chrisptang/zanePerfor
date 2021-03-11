@@ -80,17 +80,20 @@ class AlarmsService extends Service {
 
         const alarmCreateTime = Date.now;
 
-        const errorsModel = this.ctx.model.Web[`web_errors_${appId}`];
+        const errorsModel = this.app.models.WebErrors(appId);
         if (!errorsModel) {
-            this.app.logger.warn(`no web_errors for app:${appId}`, this.ctx.model.Web);
+            this.app.logger.warn(`no web_errors for app:${appId}`, this.app.models);
             return 0;
         }
         const groupedErrors = await errorsModel.aggregate([
             { $match: { app_id: appId, create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 60) } } },
             {
                 $group: {
-                    _category: '$category',
-                    count: { $sum: 1 }
+                    "_id": "$_id",
+                    "_category": { "$first": "$category" },
+                    "count": {
+                        "$sum": 1
+                    }
                 }
             }
         ]);
