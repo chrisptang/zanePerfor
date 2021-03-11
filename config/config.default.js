@@ -149,9 +149,9 @@ module.exports = () => {
     // shell重启（可选填）
     config.shell_restart = {
         // mongodb重启shell,如果mongodb进程kill了，请求不了数据库时重启
-        mongodb: [ path.resolve(__dirname, '../mongodb-restart.sh') ],
+        mongodb: [path.resolve(__dirname, '../mongodb-restart.sh')],
         // node.js服务重启shell,mongodb重启时，数据库连接池有可能会断，这时需要重启服务
-        servers: [ path.resolve(__dirname, '../servers-restart.sh') ],
+        servers: [path.resolve(__dirname, '../servers-restart.sh')],
     };
 
     // ip 解析 为 省市区
@@ -162,6 +162,11 @@ module.exports = () => {
     };
 
 
+    //钉钉机器人告警；
+    config.dintalk_bot = {
+        url: 'https://dingtalk.com/?xxxx=1234567890'
+    }
+
     // 分页条数
     config.pageSize = 50;
 
@@ -169,7 +174,7 @@ module.exports = () => {
     config.github = {
         client_id: 'xxxxxx', // github的 Client Id
         client_secret: 'xxxxxx', // github的 Client Secret
-        scope: [ 'user' ], // 表示只获取用户信息
+        scope: ['user'], // 表示只获取用户信息
     };
 
     // ldap
@@ -184,7 +189,7 @@ module.exports = () => {
     config.weibo = {
         client_id: 'xxxxxx', // 微博的App Key
         client_secret: 'xxxxxx', // 微博的App Secret
-        scope: [ 'all' ],
+        scope: ['all'],
     };
 
     // wechat login
@@ -275,7 +280,7 @@ module.exports = () => {
     };
 
     config.security = {
-        domainWhiteList: [ 'http://127.0.0.1:18090' ],
+        domainWhiteList: ['http://127.0.0.1:18090'],
         csrf: {
             enable: false,
             ignore: '/api/v1/report/**',
@@ -297,6 +302,7 @@ module.exports = () => {
             ctx.status = 200;
             // 统一错误日志记录
             ctx.logger.info(`统一错误日志：发现了错误${err}`);
+            // ctx.logger.info(`${ctx.get('X-Real-IP')}, ${ctx.get('X-Forwarded-For')}, ${ctx.request.ip}, ${JSON.stringify(ctx.request.headers)}`);
         },
     };
 

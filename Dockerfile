@@ -8,7 +8,7 @@ ENV MONGO_PASSWORD ''
 ENV REDIS_HOST 'localhost'
 ENV REDIS_USER 'root'
 ENV REDIS_PASSWORD ''
-ENV DINGTALK_BOT 'https://dingtalk-bot-url/?accessToken=foo'
+ENV CONFIG_DINGTALK_BOT_URL 'https://dingtalk-bot-url/?accessToken=foo'
 
 #环境：dev，开发环境，prod线上环境
 ENV ENV_TYPE 'dev'

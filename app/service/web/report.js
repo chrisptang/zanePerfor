@@ -7,6 +7,8 @@ class ReportService extends Service {
     // 保存用户上报的数据
     async saveWebReportData(ctx) {
         const query = ctx.request.body;
+
+        console.log(ctx.get('X-Real-IP'), ctx.get('X-Forwarded-For'), ctx.ip);
         const ip = ctx.get('X-Real-IP') || ctx.get('X-Forwarded-For') || ctx.ip;
 
         const system = await this.service.system.getSystemForAppId(query.appId);

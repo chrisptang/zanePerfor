@@ -12,3 +12,4 @@ run/
 *.sw*
 *.un~
 buildlogs/
+sdk.js

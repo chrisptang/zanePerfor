@@ -127,6 +127,9 @@ module.exports = () => {
     // report_data_type = mongodb 生效
     // db1与db3数据库同步每分钟执行一次
     config.report_task_time = '0 */1 * * * *';
+
+    // 每5分钟执行一次告警生成；
+    config.alarm_generate_task_time = '0 */5 * * * *';
     // db3同步db1上报数据线程数
     config.report_thread = 10;
 
@@ -149,9 +152,9 @@ module.exports = () => {
     // shell重启（可选填）
     config.shell_restart = {
         // mongodb重启shell,如果mongodb进程kill了，请求不了数据库时重启
-        mongodb: [ path.resolve(__dirname, '../mongodb-restart.sh') ],
+        mongodb: [path.resolve(__dirname, '../mongodb-restart.sh')],
         // node.js服务重启shell,mongodb重启时，数据库连接池有可能会断，这时需要重启服务
-        servers: [ path.resolve(__dirname, '../servers-restart.sh') ],
+        servers: [path.resolve(__dirname, '../servers-restart.sh')],
     };
 
     // ip 解析 为 省市区
@@ -165,11 +168,22 @@ module.exports = () => {
     // 分页条数
     config.pageSize = 50;
 
+    //钉钉机器人告警；
+    config.dintalk_bot = {
+        url: '__config_dingtalk_bot_url__'
+    }
+
+    //告警配置项；
+    config.alarm = {
+        timeInterval: 5,
+        warningThreshold: 10
+    }
+
     // github login
     config.github = {
         client_id: '__config_github_client_id__',
         client_secret: '__config_github_client_secret__',
-        scope: [ 'user' ], // 表示只获取用户信息
+        scope: ['user'], // 表示只获取用户信息
     };
 
     // ldap
@@ -184,7 +198,7 @@ module.exports = () => {
     config.weibo = {
         client_id: '', // 微博的App Key
         client_secret: '', // 微博的App Secret
-        scope: [ 'all' ],
+        scope: ['all'],
     };
 
     // wechat login
@@ -275,7 +289,7 @@ module.exports = () => {
     };
 
     config.security = {
-        domainWhiteList: [ 'http://127.0.0.1:18090' ],
+        domainWhiteList: ['http://127.0.0.1:18090'],
         csrf: {
             enable: false,
             ignore: '/api/v1/report/**',
