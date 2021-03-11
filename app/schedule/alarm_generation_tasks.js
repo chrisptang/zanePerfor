@@ -9,14 +9,15 @@ module.exports = app => {
             disable: false,
         },
         async task(ctx) {
-            app.logger.info('生成所有app的告警任务启动ing...');
+            console.info('生成所有app的告警任务启动ing...');
             const app_list = await ctx.model.System.find({ is_use: 0 }).exec();
             if (app_list && app_list.length > 0) {
-                app_list.forEach(app => {
-                    app.logger.info(`app:${app.app_id}的生成告警任务启动ing...`);
-                    const result = await ctx.service.alarm.generateAlarmsForApp(app.app_id);
-                    app.logger.info(`app:${app.app_id}的生成告警任务结果:${result}`);
-                });
+                for (let i = 0; i < app_list.length; i++) {
+                    let app = app_list[i];
+                    console.info(`app:${app.app_id}的生成告警任务启动ing...`);
+                    const result = await ctx.service.alarms.generateErrorAlarmsForApp(app.app_id);
+                    console.info(`app:${app.app_id}的生成告警任务结果:${result}`);
+                }
             }
         },
     };

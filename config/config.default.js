@@ -127,6 +127,9 @@ module.exports = () => {
     // report_data_type = mongodb 生效
     // db1与db3数据库同步每分钟执行一次
     config.report_task_time = '0 */1 * * * *';
+
+    //测试的时候每分钟跑一次
+    config.alarm_generate_task_time = '0 */1 * * * *';
     // db3同步db1上报数据线程数
     config.report_thread = 10;
 
