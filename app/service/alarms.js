@@ -78,7 +78,7 @@ class AlarmsService extends Service {
         let warningThreshold = 10;
         if (this.app.config.alarm.warningThreshold) warningThreshold = this.app.config.alarm.warningThreshold;
 
-        const alarmCreateTime = Date.now;
+        const alarmCreateTime = Date.now, alarmSendTime = new Date();
 
         const errorsModel = this.app.models.WebErrors(appId);
         if (!errorsModel) {
@@ -86,7 +86,7 @@ class AlarmsService extends Service {
             return 0;
         }
         const groupedErrors = await errorsModel.aggregate([
-            { $match: { app_id: appId, create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 60) } } },
+            { $match: { create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 1800) } } },
             {
                 $group: {
                     "_id": "$_id",
@@ -104,7 +104,9 @@ class AlarmsService extends Service {
                 totalErrors += group.count;
                 return `${group._category}:${group.count} 次`;
             }).join(", ");
-            content = `应用[${appId}] 发生脚本异常[ ${content} ]，告警时间：${new Date(alarmCreateTime)}，告警间隔：${timeInterval} 分钟`;
+            this.app.logger.warn(`告警列表：${JSON.stringify(groupedErrors)}`);
+            const alarmUrl = `http://${this.app.config.host}:${this.app.config.port}/web/erroravg`;
+            content = `应用[${appId}] 发生脚本异常[ ${content} ]，告警时间：${alarmSendTime}，告警间隔：${timeInterval} 分钟，请登陆: ${alarmUrl} 查看详情`;
             const title = '脚本异常告警', category = 'web_errors', level = totalErrors > warningThreshold ? "error" : "warn";
 
             const result = await this.addAlarm({ title, appId, content, category, level });
@@ -162,7 +164,7 @@ class AlarmsService extends Service {
         let { url } = this.app.config.dintalk_bot;
         const json = { 'msgtype': 'text', 'text': { 'content': `${alarmTitle} ${alarm.content}` } };
         if (url) {
-            const sendResult = await ctx.curl(url, {
+            const sendResult = await this.ctx.curl(url, {
                 method: 'POST',
                 contentType: 'json',
                 data: json,
