@@ -2,6 +2,7 @@
 
 const Service = require('egg').Service;
 const parser = require('cron-parser');
+const dateFormat = require("dateformat");
 
 class AlarmsService extends Service {
 
@@ -73,12 +74,12 @@ class AlarmsService extends Service {
      */
     async generateErrorAlarmsForApp(appId) {
         if (!appId) throw new Error("App id could not be empty");
-        let timeInterval = 5;//5 minutes be default.
+        let timeInterval = 5;//5 minutes to be default.
         if (this.app.config.alarm.timeInterval) timeInterval = this.app.config.alarm.timeInterval;
         let warningThreshold = 10;
         if (this.app.config.alarm.warningThreshold) warningThreshold = this.app.config.alarm.warningThreshold;
 
-        const alarmCreateTime = Date.now, alarmSendTime = new Date();
+        const alarmCreateTime = Date.now, alarmSendTime = dateFormat(new Date(), "yyyy-mm-dd hh:MM:ss");
 
         const errorsModel = this.app.models.WebErrors(appId);
         if (!errorsModel) {
@@ -86,33 +87,25 @@ class AlarmsService extends Service {
             return 0;
         }
         const groupedErrors = await errorsModel.aggregate([
-            { $match: { create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 1800) } } },
-            {
-                $group: {
-                    "_id": "$_id",
-                    "_category": { "$first": "$category" },
-                    "count": {
-                        "$sum": 1
-                    }
-                }
-            }
+            { $match: { create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 60) } } },
+            { "$group": { _id: "$category", count: { $sum: 1 } } }
         ]);
 
         if (groupedErrors.length > 0) {
             let totalErrors = 0;
             let content = groupedErrors.map(group => {
                 totalErrors += group.count;
-                return `${group._category}:${group.count} 次`;
+                return `${group._id}: ${group.count} 次`;
             }).join(", ");
             this.app.logger.warn(`告警列表：${JSON.stringify(groupedErrors)}`);
             const alarmUrl = `http://${this.app.config.host}:${this.app.config.port}/web/erroravg`;
-            content = `应用[${appId}] 发生脚本异常[ ${content} ]，告警时间：${alarmSendTime}，告警间隔：${timeInterval} 分钟，请登陆: ${alarmUrl} 查看详情`;
+            content = `应用[${appId}] 发生脚本异常:[ ${content} ]，告警时间：${alarmSendTime}，告警间隔：${timeInterval} 分钟，请登陆: ${alarmUrl} 查看详情`;
             const title = '脚本异常告警', category = 'web_errors', level = totalErrors > warningThreshold ? "error" : "warn";
 
             const result = await this.addAlarm({ title, appId, content, category, level });
             return result;
         } else {
-            console.warn(`app:${appId} looks great, no errors.`);
+            console.info(`app:${appId} looks great, no errors.`);
         }
         return 0;
     }
