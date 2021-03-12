@@ -14,10 +14,11 @@ module.exports = app => {
         content: { type: String }, // 告警内容
         error_message: { type: String }, // 发送异常信息
         create_time: { type: Date, default: Date.now }, // 告警生成时间
-        sent_time: { type: Date }, // 告警发送时间
+        sent_time: { type: Date }, // 告警发送结束时间
+        send_start_time: { type: Date },//告警发送开始时间
     });
 
-    AlarmSchema.index({ app_id: -1,create_time: -1 });
+    AlarmSchema.index({ app_id: -1, create_time: -1 });
 
     return conn.model('Alarm', AlarmSchema);
 };

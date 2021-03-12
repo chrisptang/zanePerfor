@@ -23,6 +23,9 @@ module.exports = app => {
                             ctx.app.logger.warn(`alarm id:${element._id}, send result:${sendResult}`);
                         });
                     }
+
+                    //mark those alarms that takes too much time to finish as failed.
+                    await ctx.service.alarms.markUnsuccessful(app);
                 }
             }
         },

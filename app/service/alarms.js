@@ -140,6 +140,25 @@ class AlarmsService extends Service {
     }
 
     /*
+     * 将所有发送超时的消息标记为发送失败；
+     * 
+     * @param {*} appId
+     * @returns
+     * @memberof AlarmsService
+     */
+    async markUnsuccessful(appId) {
+        // 30 分钟前开始的发送任务，标记为失败；
+        const matchDate = new Date(new Date().getTime() - 30 * 60000);
+        const query = { status: 2, send_start_time: { $gte: matchDate } };
+        if (appId) query.app_id = appId;
+        return await this.ctx.model.Alarm.updateMany(query, {
+            status: -2,
+            sent_time: new Date(),
+            error_message: 'message send timeouted, aborted by async task'
+        }).exec();
+    }
+
+    /*
      * 发送某一告警；
      *
      * @param {*} id
@@ -152,7 +171,7 @@ class AlarmsService extends Service {
         if (!alarm || alarm.status != 0) {
             throw new Error(`sendAlarm failed, ID:${id}, alarm not found or status is not 0.`);
         }
-        let updateRet = await this.ctx.model.Alarm.findByIdAndUpdate(id, { status: 2 }).exec();
+        let updateRet = await this.ctx.model.Alarm.findByIdAndUpdate(id, { status: 2, send_start_time: new Date() }).exec();
         const system = await this.ctx.service.system.getSystemForAppId(alarm.app_id);
         let { system_name } = system;
         let alarmTitle = `【${system_name}】告警【${alarm.title}】`;
