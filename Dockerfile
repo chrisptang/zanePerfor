@@ -33,10 +33,10 @@ ENV CONFIG_WECHAT_CLIENT_SECRET ''
 
 COPY . /app
 WORKDIR /app
-RUN npm install
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
 RUN chmod +x /app/docker-start.sh
+RUN npm ci --only=production
 EXPOSE 7001
 EXPOSE 7002
 CMD /app/docker-start.sh
