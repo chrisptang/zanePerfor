@@ -79,15 +79,17 @@ class AlarmsService extends Service {
         let warningThreshold = 10;
         if (this.app.config.alarm.warningThreshold) warningThreshold = this.app.config.alarm.warningThreshold;
 
-        const alarmCreateTime = Date.now, alarmSendTime = dateFormat(new Date(), "yyyy-mm-dd hh:MM:ss");
+        const alarmCreateTime = new Date(), alarmSendTime = dateFormat(alarmCreateTime, "yyyy-mm-dd hh:MM:ss");
 
         const errorsModel = this.app.models.WebErrors(appId);
         if (!errorsModel) {
             this.app.logger.warn(`no web_errors for app:${appId}`, this.app.models);
             return 0;
         }
+        const matchDate = new Date(alarmCreateTime.getTime() - timeInterval * 60000);
+        this.app.logger.warn(`matchDate:${matchDate}`);
         const groupedErrors = await errorsModel.aggregate([
-            { $match: { create_time: { $gte: new Date(alarmCreateTime - timeInterval * 1000 * 60) } } },
+            { $match: { create_time: { $gte: matchDate } } },
             { "$group": { _id: "$category", count: { $sum: 1 } } }
         ]);
 
@@ -155,8 +157,33 @@ class AlarmsService extends Service {
         let { system_name } = system;
         let alarmTitle = `【${system_name}】告警【${alarm.title}】`;
         let { url } = this.app.config.dintalk_bot;
-        const json = { 'msgtype': 'text', 'text': { 'content': `${alarmTitle} ${alarm.content}` } };
         if (url) {
+            const is_success = await this.ctx.service.alarms.sendMessageToDingtalk(`${alarmTitle} ${alarm.content}`, url);
+            return await this.ctx.model.Alarm.findByIdAndUpdate(id, {
+                status: is_success ? 1 : -1,
+                sent_time: new Date(),
+                error_message: is_success ? '' : 'dingtalk api call was unsuccessful'
+            }).exec();
+        } else {
+            return await this.ctx.model.Alarm.findByIdAndUpdate(id, {
+                status: -2,
+                sent_time: new Date(),
+                error_message: 'dingtalk api config was missing, check the value of: "config.dingtalk.url"'
+            }).exec();
+        }
+    }
+
+    /*
+     * 调用钉钉的机器人API进行消息发送；
+     *
+     * @param {*} content：消息内容
+     * @param {*} url：钉钉机器人URL；
+     * @returns true or false
+     * @memberof AlarmsService
+     */
+    async sendMessageToDingtalk(content, url) {
+        const json = { 'msgtype': 'text', 'text': { 'content': content } };
+        try {
             const sendResult = await this.ctx.curl(url, {
                 method: 'POST',
                 contentType: 'json',
@@ -164,13 +191,19 @@ class AlarmsService extends Service {
                 dataType: 'json',
                 timeout: 8000,
             });
+            this.app.logger.warn(`URL result:${JSON.stringify(sendResult)}`);
             if (sendResult.status !== 200) {
-                return await this.ctx.model.Alarm.findByIdAndUpdate(id, { status: 1 }).exec();
-            } else {
-                return await this.ctx.model.Alarm.findByIdAndUpdate(id, { status: -1, sent_time: new Date() }).exec();
+                return false;
             }
-        } else {
-            return await this.ctx.model.Alarm.findByIdAndUpdate(id, { status: -2 }).exec();
+            const dingtalkJson = sendResult.data;
+            if (!dingtalkJson || dingtalkJson.errcode !== 0) {
+                this.app.logger.error(`钉钉机器人API调用异常:${JSON.stringify(dingtalkJson)}`);
+                return false;
+            }
+            return true;
+        } catch (err) {
+            this.app.logger.error(`\n钉钉告警发送异常:${err},\n content:${content},\n url:${url}`);
+            return false;
         }
     }
 

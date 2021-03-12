@@ -12,6 +12,7 @@ module.exports = app => {
         category: { type: String, default: 'error' }, // 告警分类（error,pvuvip,ajaxs）等，视情况；
         title: { type: String }, // 告警title
         content: { type: String }, // 告警内容
+        error_message: { type: String }, // 发送异常信息
         create_time: { type: Date, default: Date.now }, // 告警生成时间
         sent_time: { type: Date }, // 告警发送时间
     });

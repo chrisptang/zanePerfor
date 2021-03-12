@@ -173,7 +173,7 @@ module.exports = () => {
 
     //钉钉机器人告警；
     config.dintalk_bot = {
-        url: 'https://oapi.dingtalk.com/robot/send?access_token=d082d8631e7ed6c84c4b3ebcbd81cd284a68de55d10f4561e1b2fd93d3774687'
+        url: 'https://oapi.dingtalk.com/robot/send?access_token=123456abc'
     }
 
     // 分页条数
