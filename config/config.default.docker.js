@@ -129,7 +129,7 @@ module.exports = () => {
     config.report_task_time = '0 */1 * * * *';
 
     // 每5分钟执行一次告警生成；
-    config.alarm_generate_task_time = '0 */5 * * * *';
+    config.alarm_generate_task_time = '0 0/5 * * * *';
     // db3同步db1上报数据线程数
     config.report_thread = 10;
 

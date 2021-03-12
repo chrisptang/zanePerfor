@@ -129,7 +129,7 @@ module.exports = () => {
     config.report_task_time = '0 */1 * * * *';
 
     //测试的时候每分钟跑一次
-    config.alarm_generate_task_time = '0 */1 * * * *';
+    config.alarm_generate_task_time = '0 0/2 * * * *';
     // db3同步db1上报数据线程数
     config.report_thread = 10;
 
