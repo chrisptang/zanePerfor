@@ -36,7 +36,7 @@ WORKDIR /app
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
 RUN chmod +x /app/docker-start.sh
-RUN npm ci --only=production
+RUN npm install
 EXPOSE 7001
 EXPOSE 7002
 CMD /app/docker-start.sh
