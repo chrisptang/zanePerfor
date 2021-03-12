@@ -107,7 +107,7 @@ class AlarmsService extends Service {
             const result = await this.addAlarm({ title, appId, content, category, level });
             return result;
         } else {
-            console.info(`app:${appId} looks great, no errors.`);
+            this.app.logger.info(`app:${appId} looks great, no errors.`);
         }
         return 0;
     }
