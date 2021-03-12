@@ -87,7 +87,7 @@ class AlarmsService extends Service {
             return 0;
         }
         const matchDate = new Date(alarmCreateTime.getTime() - timeInterval * 60000);
-        this.app.logger.warn(`matchDate:${matchDate}`);
+        
         const groupedErrors = await errorsModel.aggregate([
             { $match: { create_time: { $gte: matchDate } } },
             { "$group": { _id: "$category", count: { $sum: 1 } } }
@@ -149,7 +149,13 @@ class AlarmsService extends Service {
     async markUnsuccessful(appId) {
         // 30 分钟前开始的发送任务，标记为失败；
         const matchDate = new Date(new Date().getTime() - 30 * 60000);
-        const query = { status: 2, send_start_time: { $gte: matchDate } };
+        const query = {
+            status: 2,
+            $or: [
+                { send_start_time: null },
+                { send_start_time: { $lte: matchDate } }
+            ]
+        };
         if (appId) query.app_id = appId;
         return await this.ctx.model.Alarm.updateMany(query, {
             status: -2,

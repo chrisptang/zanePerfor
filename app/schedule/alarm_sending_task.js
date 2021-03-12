@@ -25,7 +25,8 @@ module.exports = app => {
                     }
 
                     //mark those alarms that takes too much time to finish as failed.
-                    await ctx.service.alarms.markUnsuccessful(app);
+                    const mark_result = await ctx.service.alarms.markUnsuccessful(app.app_id);
+                    ctx.app.logger.warn(`app:${app.app_id} mark_result:${JSON.stringify(mark_result)}`);
                 }
             }
         },
