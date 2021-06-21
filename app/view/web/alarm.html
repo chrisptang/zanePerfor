@@ -129,6 +129,10 @@
 	</div>
 	<div class="setting-body">
 		<div class="block" v-show="lable==1">
+			<div class='search search_1 mb20'>
+				<input id="alarmTimePicker" class="inp" type="text" placeholder="按时间段搜索，默认展示最近2天">
+				<div class="tipscolor mt10" v-if="errText">{{errText}}</div>
+			</div>
 			<div class="tc" id="alarmsList">
 				<div v-show="isLoadend && alarmsList.length">
 					<div class="com_block mt20">
@@ -158,7 +162,9 @@
 						<div id="copot-page" class="copot-page"></div>
 					</div>
 				</div>
-				<div v-if="isLoadend && !alarmsList.length" class="empty mt30 tc">暂无用户！</div>
+				<div v-if="isLoadend && !alarmsList.length" class="empty mt30 tc">
+					很好！你的应用此段时间内没有任何告警
+				</div>
 			</div>				
 		</div>
 		<div class="block" v-show="lable==2">
@@ -183,10 +189,38 @@ new Vue({
 			totalNum: 0,
 			username: '',
 			userMsg: {},
+			endDate: new Date(),
+			timebetween: 7,
+			startDate: new Date(new Date().getDate() - 2),
+			errText:'',
 		}
 	},
 	mounted() {
 		this.getAlarmList();
+		zaneDate({
+			elem: '#alarmTimePicker',
+			type: 'doubleday',
+			format: 'yyyy/MM/dd HH:mm:ss',
+			showtime: true,
+			done: (fulltime, begintime, endtime) => {
+				this.errText = '';
+				let beginstrap = new Date(begintime).getTime();
+				let endstrap = new Date(endtime).getTime();
+				let between = endstrap - beginstrap;
+				let maxtime = this.timebetween * 60 * 60 * 24 * 1000;
+				if (between < 0) {
+					this.errText = "结束时间不能小于开始时间";
+					return false;
+				}
+				if (between > maxtime) {
+					this.errText = `日期跨度不应该超过${this.timebetween}天`;
+					return false;
+				}
+				this.startDate = new Date(begintime);
+				this.endDate = new Date(endtime);
+				this.getAlarmList();
+			},
+		});
 	},
 	methods: {
 		checkoutLabel(lable) {
@@ -200,6 +234,8 @@ new Vue({
 				data: {
 					pageNo: this.pageNo,
 					pageSize: this.pageSize,
+					startDate: this.startDate,
+					endDate: this.endDate,
 					appId: util.getStorage('local', 'appId')
 				},
 				success: data => {
