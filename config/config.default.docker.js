@@ -23,7 +23,7 @@ module.exports = () => {
 
     config.port = 7001;
 
-    config.origin = '__config_origin__';
+    config.alarm_origin = '__config_origin__';
 
     // 集群配置（一般默认即可）
     config.cluster = {

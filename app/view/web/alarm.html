@@ -126,35 +126,122 @@
 		<div class="item" :class="{'active':lable==1}" @click="checkoutLabel(1)">告警列表</div>
 		<div class="item" :class="{'active':lable==2}" @click="checkoutLabel(2)">告警规则</div>
 		<div class="item" :class="{'active':lable==3}" @click="checkoutLabel(3)">告警条件</div>
-
 	</div>
 	<div class="setting-body">
 		<div class="block" v-show="lable==1">
-			<div class="tc">开发中...</div>				
+			<div class="tc" id="alarmsList">
+				<div v-show="isLoadend && alarmsList.length">
+					<div class="com_block mt20">
+						<div class="overflow_table">
+							<table class="table">
+								<tr class="light_color">
+									<th class="tc w-100">应用ID</th>
+									<th class="tc w-100">应用名称</th>
+									<th class="tc w-100">告警时间</th>
+									<th class="tc w-200">告警标题</th>
+									<th class="tc w-200">告警内容</th>
+									<th class="tc w-200">告警类别</th>
+								</tr>
+								<tr v-for="item in alarmsList">
+									<td class="tc">{{item.app_id}}</td>
+									<td class="tc">{{item.app_name}}</td>
+									<td class="tc">{{new Date(item.create_time).toLocaleString()}}</td>
+									<td class="tc">{{item.title}}</td>
+									<td class="tc">{{item.content}}</td>
+									<td class="tc">{{item.category}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<!--  分页 -->
+					<div class="tc common_page_style mt10">
+						<div id="copot-page" class="copot-page"></div>
+					</div>
+				</div>
+				<div v-if="isLoadend && !alarmsList.length" class="empty mt30 tc">暂无用户！</div>
+			</div>				
 		</div>
 		<div class="block" v-show="lable==2">
-			<div class="tc">开发中...</div>
+			<div class="tc">暂时不支持设置告警规则</div>
 		</div>
 		<div class="block block-two" v-show="lable==3">
-			<div class="tc">开发中...</div>
+			<div class="tc">“告警条件”开发中...</div>
 		</div>
 	</div>
 </div>
-x<script src="//cdn.bootcss.com/switchery/0.8.2/switchery.min.js"></script>
+<script src="//cdn.bootcss.com/switchery/0.8.2/switchery.min.js"></script>
 <script>
 new Vue({
 	el: '#vue_id',
-	data: function () {
+	data: function() {
 		return {
-			lable:1, //1:概况 2：pv|uv|ip
-			appId: util.getStorage('local', 'appId'),
+			alarmsList: [],
+			isLoadend: false,
+			lable:1,
+			pageNo: 1,
+			pageSize: 10,
+			totalNum: 0,
+			username: '',
+			userMsg: {},
 		}
 	},
 	mounted() {
+		this.getAlarmList();
 	},
 	methods: {
 		checkoutLabel(lable) {
 			this.lable = lable;
+		},
+		getAlarmList() {
+			this.isLoadend = false;
+			util.ajax({
+				url: `${config.baseApi}api/v1/alarms/list`,
+				type:"get",
+				data: {
+					pageNo: this.pageNo,
+					pageSize: this.pageSize,
+					appId: util.getStorage('local', 'appId')
+				},
+				success: data => {
+					this.isLoadend = true;
+					if (!data.data.datalist && !data.data.datalist.length) {
+						this.datalist = [];
+						return;
+					}
+					this.alarmsList = data.data.datalist;
+					let app = JSON.parse(util.getStorage('local','appSelected'));
+					this.alarmsList.forEach(element => {
+						element.app_name = app.system_name;
+					});
+					new Page({
+						parent: $('#copot-page'),
+						nowPage: this.pageNo,
+						pageSize: this.pageSize,
+						totalCount: data.data.totalNum,
+						callback: (nowPage, totalPage) => {
+							this.pageNo = nowPage;
+							this.getAlarmList();
+						}
+					});
+				}
+			})
+		},
+		deleteUser(item) {
+			const _this = this;
+			popup.confirm({
+				title: '确定删除此用户吗？',
+				yes() {
+					util.ajax({
+						url: `${config.baseApi}api/v1/alarms/${item._id}`,
+						success: data => {
+							_this.getAlarmList();
+							popup.miss({
+								title: '操作成功!'
+							})
+						}
+					})
+				}
+			})
 		},
 	},
 })

@@ -201,7 +201,7 @@ class WebController extends Controller {
         const { ctx } = this;
         await ctx.render('web/alarm', {
             data: {
-                title: '应用告警设置',
+                title: '应用告警',
             },
         });
     }

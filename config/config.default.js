@@ -19,11 +19,12 @@ module.exports = () => {
 
     // 线上环境此处替换为项目根域名 例如:blog.seosiwei.com (这里不需要填写http|https和斜杠等字符)
     // 用于安全校验和回调域名根路径 开发路径域名
-    config.host = '172.20.200.118';
+    config.host = 'zane.config.origin.test.com';
 
     config.port = 7002;
 
     // config.origin = `http://${config.host}:${config.port}`;
+    config.alarm_origin = "http://zane.config.origin.test.com";
 
     // 集群配置（一般默认即可）
     config.cluster = {

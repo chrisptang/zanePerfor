@@ -133,7 +133,8 @@
 				}else if (type === 2 && item.type === 'wx') {
 					location.href = '/wx/home';	
 				}	
-				util.setStorage('local','appId',item.app_id)
+				util.setStorage('local','appId',item.app_id);
+				util.setStorage('local','appSelected',item);
 			}
 		},
 	})

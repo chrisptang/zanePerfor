@@ -101,8 +101,8 @@ class AlarmsService extends Service {
             }).join(", ");
             this.app.logger.warn(`告警列表：${JSON.stringify(groupedErrors)}`);
             let alarmUrl = `http://${this.app.config.host}:${this.app.config.port}/web/erroravg`;
-            if (this.app.config.origin) {
-                alarmUrl = `http://${this.app.config.origin}/web/erroravg`;
+            if (this.app.config.alarm_origin) {
+                alarmUrl = `${this.app.config.alarm_origin}/web/erroravg`;
             }
             content = `应用[${appId}] 发生脚本异常:[ ${content} ]，告警时间：${alarmSendTime}，告警间隔：${timeInterval} 分钟，请登陆: ${alarmUrl} 查看详情`;
             const title = '脚本异常告警', category = 'web_errors', level = totalErrors > warningThreshold ? "error" : "warn";
