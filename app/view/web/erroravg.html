@@ -72,6 +72,11 @@
 </div>
 
 <script>
+	let appId = util.getStorage('local', 'appId');
+	let urlSearchParams = new URLSearchParams(window.location.search);
+	if(urlSearchParams.has("app")){
+		appId=urlSearchParams.get("app");
+	}
 	new Vue({
 		el: '#pages',
 		data: function () {
@@ -83,7 +88,7 @@
 				beginTime: '',
 				endTime: '',
 				isLoadend: false,
-				appId: util.getStorage('local', 'appId'),
+				appId: appId,
 				type: '', 
 				url:'',
 				errText:'',
