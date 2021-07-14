@@ -414,7 +414,10 @@ class ReportTaskService extends Service {
     // 存储错误信息
     saveErrors(data) {
         if (!data.error_list && !data.error_list.length) return;
-        data.error_list.forEach(item => {
+        data.error_list.filter(item => {
+            //filter out 'ResizeObserver' error, which is safelly ignoreable.
+            return !item.msg || item.msg.indexOf('ResizeObserver') < 0;
+        }).forEach(item => {
             const newurl = url.parse(item.data.resourceUrl || '');
             const newName = newurl.protocol + '//' + newurl.host + newurl.pathname;
             const querydata = newurl.query ? JSON.stringify(querystring.parse(newurl.query)) : '{}';
@@ -501,7 +504,7 @@ class ReportTaskService extends Service {
         this.cacheArr.push(copyip);
         const filepath = path.resolve(__dirname, `../../cache/${this.app.config.ip_city_cache_file.web}`);
         const str = `"${copyip}":${JSON.stringify(json)},`;
-        fs.appendFile(filepath, str, { encoding: 'utf8' }, () => {});
+        fs.appendFile(filepath, str, { encoding: 'utf8' }, () => { });
     }
 }
 
