@@ -249,7 +249,7 @@ module.exports = () => {
     config.redis = {
         client: {
             port: 6379, // Redis port
-            host: '127.0.0.1', // Redis host
+            host: '10.118.53.39', // Redis host
             password: '',
             db: 0,
         },
@@ -259,7 +259,7 @@ module.exports = () => {
     const dbclients = {
         db3: {
             // 单机部署
-            url: 'mongodb://root:mongo-toor@127.0.0.1:27017/performance?authSource=admin',//   e.g: mongodb://127.0.0.1:27017/performance
+            url: 'mongodb://root:mongo-toor@10.118.53.39:27017/performance?authSource=admin',//   e.g: mongodb://127.0.0.1:27017/performance
             // 副本集 读写分离
             // url: 'mongodb://127.0.0.1:28100,127.0.0.1:28101,127.0.0.1:28102/performance?replicaSet=rs1',
             // 集群分片
@@ -272,7 +272,7 @@ module.exports = () => {
     };
     if (config.report_data_type === 'mongodb') {
         dbclients.db1 = {
-            url: 'mongodb://root:mongo-toor@127.0.0.1:27017/performance?authSource=admin',
+            url: 'mongodb://root:mongo-toor@10.118.53.39:27017/performance?authSource=admin',
             options: {
                 poolSize: 20,
             },

@@ -3,15 +3,19 @@ const { URL } = require('url');
 
 // 校验用户是否登录
 module.exports = () => {
-    return async function(ctx, next) {
-        const referer = ctx.request.header.referer || '';
-        const url = new URL(referer);
-        if (ctx.app.config.origin && ctx.app.config.origin.indexOf(url.origin) === -1) {
-            ctx.body = {
-                code: 1004,
-                desc: '域名来源有误,请检查config的origin配置',
-            };
-            return;
+    return async function (ctx, next) {
+
+        if (ctx.app.config.origin) {
+            //只有配置了config.origin，才检查referer
+            let referer = ctx.request.header.referer || '';
+            referer = new URL(referer);
+            if (ctx.app.config.origin.indexOf(referer.origin) === -1) {
+                ctx.body = {
+                    code: 1004,
+                    desc: '域名来源有误,请检查config的origin配置',
+                };
+                return;
+            }
         }
         const usertoken = ctx.cookies.get('usertoken', {
             encrypt: true,
