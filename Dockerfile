@@ -31,6 +31,10 @@ ENV CONFIG_GITHUB_CLIENT_SECRET ''
 ENV CONFIG_WECHAT_CLIENT_ID ''
 ENV CONFIG_WECHAT_CLIENT_SECRET ''
 
+
+# 180天
+ENV CONFIG_LOGIN_TIMEOUT 180
+
 COPY . /app
 WORKDIR /app
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime

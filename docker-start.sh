@@ -16,6 +16,7 @@ sed -i 's,__config_wechat_client_id__,'"$CONFIG_WECHAT_CLIENT_ID"',g' /app/confi
 sed -i 's,__config_wechat_client_secret__,'"$CONFIG_WECHAT_CLIENT_SECRET"',g' /app/config/config.default.docker.js
 sed -i 's,__config_dingtalk_bot_url__,'"$CONFIG_DINGTALK_BOT_URL"',g' /app/config/config.default.docker.js
 sed -i 's,__config_alarm_origin__,'"$CONFIG_ORIGIN"',g' /app/config/config.default.docker.js
+sed -i 's,__config_login_timeout__,'"$CONFIG_LOGIN_TIMEOUT"',g' /app/config/config.default.docker.js
 
 cat /app/config/config.default.docker.js > /app/config/config.default.js
 
